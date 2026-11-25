@@ -7,7 +7,7 @@ if not ide:
 
 key = os.environ["GEMINI_API_KEY"]
 VOICES = ["id-ID-ArdiNeural", "id-ID-GadisNeural"]
-candidates = [os.environ.get("GEMINI_MODEL", "").strip(), "gemini-2.5-flash", "gemini-2.5-flash-lite"]
+candidates = [os.environ.get("GEMINI_MODEL", "").strip(), "gemini-3.8-flash", "gemini-3.5-flash-lite"]
 models = [m for m in candidates if m]
 
 prompt = (
