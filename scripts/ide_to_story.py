@@ -17,7 +17,7 @@ prompt = (
     "Kolom voice diisi id-ID-ArdiNeural (cowok) atau id-ID-GadisNeural (cewek), "
     "boleh bergantian seperti dialog. "
     'Balas HANYA JSON valid dengan bentuk: {"title": "...", "fps": 30, "scenes": [{"text": "...", "voice": "..."}]}. '
-    "Ide: " + ide
+    "Tiap scene juga wajib punya kolom place (pilih satu: kota, rumah, taman) dan time (pilih satu: pagi, siang, senja, malam) sesuai tempat dan waktu kejadian scene itu. Ide: " + ide
 )
 
 body = json.dumps({

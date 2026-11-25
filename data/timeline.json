@@ -6,13 +6,17 @@
       "text": "Halo dunia!",
       "voice": "id-ID-ArdiNeural",
       "audio": "audio/scene1.mp3",
-      "seconds": 2.42
+      "seconds": 2.42,
+      "place": "rumah",
+      "time": "pagi"
     },
     {
       "text": "Ini video pertamaku.",
       "voice": "id-ID-GadisNeural",
       "audio": "audio/scene2.mp3",
-      "seconds": 3.31
+      "seconds": 3.31,
+      "place": "taman",
+      "time": "malam"
     }
   ]
 }
