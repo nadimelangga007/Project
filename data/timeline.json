@@ -1,0 +1,18 @@
+{
+  "title": "Tes Audio",
+  "fps": 30,
+  "scenes": [
+    {
+      "text": "Halo dunia!",
+      "voice": "id-ID-ArdiNeural",
+      "audio": "audio/scene1.mp3",
+      "seconds": 2.42
+    },
+    {
+      "text": "Ini video pertamaku.",
+      "voice": "id-ID-GadisNeural",
+      "audio": "audio/scene2.mp3",
+      "seconds": 3.31
+    }
+  ]
+}

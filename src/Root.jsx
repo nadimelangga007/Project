@@ -1,7 +1,7 @@
 import React from "react";
 import { Composition } from "remotion";
 import { Video } from "./Video";
-import story from "../data/story.json";
+import story from "../data/timeline.json";
 
 export const Root = () => {
   const fps = story.fps;
