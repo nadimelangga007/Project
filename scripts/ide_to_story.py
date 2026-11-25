@@ -27,7 +27,9 @@ prompt = (
     "Kolom place pilih satu: kota, rumah, taman. "
     "Kolom time pilih satu: pagi, siang, senja, malam. "
     "Isi place dan time sesuai tempat dan waktu kejadian tiap scene. "
-    'Balas HANYA JSON valid dengan bentuk: {"title": "...", "fps": 30, "scenes": [{"text": "...", "voice": "...", "place": "...", "time": "..."}]}. '
+    "Kolom action pilih satu: bicara (berdiri ngobrol) atau jalan (jalan bersama). "
+    "Kolom prop pilih satu: tidak atau gelas (pembicara memegang gelas). "
+    'Balas HANYA JSON valid dengan bentuk: {"title": "...", "fps": 30, "scenes": [{"text": "...", "voice": "...", "place": "...", "time": "...", "action": "...", "prop": "..."}]}. '
     "Ide: " + ide
 )
 
@@ -72,6 +74,10 @@ for i, s in enumerate(result["scenes"]):
         s["place"] = "kota"
     if s.get("time") not in TIMES:
         s["time"] = "siang"
+    if s.get("action") not in ("bicara", "jalan"):
+        s["action"] = "bicara"
+    if s.get("prop") not in ("tidak", "gelas"):
+        s["prop"] = "tidak"
 result["fps"] = 30
 result.setdefault("title", "Video")
 

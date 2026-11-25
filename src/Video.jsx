@@ -9,6 +9,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { loadFont } from "@remotion/google-fonts/PressStart2P";
+import { Cast } from "./Char";
 
 const { fontFamily } = loadFont();
 
@@ -146,24 +147,7 @@ const House = ({ time }) => {
   );
 };
 
-const Char = ({ x, y, hair, hoodie, long, talking, frame }) => {
-  const open = talking && Math.floor(frame / 5) % 2 === 0;
-  return (
-    <g transform={`translate(${x}, ${y + (open ? -2 : 0)}) scale(2)`} opacity={talking ? 1 : 0.7}>
-      <rect x="2" y="26" width="28" height="30" fill={hoodie} />
-      <rect x="12" y="26" width="8" height="6" fill="#f2c39b" />
-      <rect x="4" y="4" width="24" height="22" fill="#f2c39b" />
-      <rect x="3" y="1" width="26" height="8" fill={hair} />
-      {long && <rect x="2" y="5" width="4" height="20" fill={hair} />}
-      {long && <rect x="26" y="5" width="4" height="20" fill={hair} />}
-      <rect x="10" y="14" width="3" height="3" fill="#1a1c2c" />
-      <rect x="19" y="14" width="3" height="3" fill="#1a1c2c" />
-      <rect x="13" y={open ? 20 : 21} width="6" height={open ? 4 : 2} fill="#b13e53" />
-    </g>
-  );
-};
-
-const Scene = ({ text, audio, voice, duration, place, time }) => {
+const Scene = ({ text, audio, voice, duration, place, time, action, prop }) => {
   const frame = useCurrentFrame();
   const male = voice.includes("Ardi");
   const t = SKIES[time] ? time : "senja";
@@ -188,8 +172,8 @@ const Scene = ({ text, audio, voice, duration, place, time }) => {
         {p === "taman" && <Park />}
         {p === "rumah" && <House time={t} />}
         <rect x="0" y="0" width="180" height="320" fill={TINT[t][0]} opacity={TINT[t][1]} />
-        <Char x={20} y={150} hair="#1a1c2c" hoodie="#ffcd75" talking={male} frame={frame} />
-        <Char x={96} y={150} hair="#5d275d" hoodie="#41a6f6" long talking={!male} frame={frame} />
+        <Cast frame={frame} duration={duration} male={male} action={action} prop={prop} />
+        
       </svg>
       <div
         style={{
@@ -235,6 +219,8 @@ export const Video = ({ story }) => {
               duration={duration}
               place={scene.place}
               time={scene.time}
+              action={scene.action}
+              prop={scene.prop}
             />
           </Sequence>
         );
