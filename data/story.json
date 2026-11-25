@@ -1,0 +1,8 @@
+{
+      "title": "Tes Pertama",
+        "fps": 30,
+          "scenes": [
+              { "text": "HALO DUNIA!", "seconds": 3 },
+                  { "text": "INI VIDEO PERTAMAKU", "seconds": 3 }
+                    ]
+                    }
