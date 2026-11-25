@@ -1,0 +1,23 @@
+name: Render video
+on: workflow_dispatch
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: npm ci
+      - run: pip install edge-tts mutagen
+      - run: python scripts/generate.py
+      - run: npx remotion render src/index.jsx Main out/video.mp4
+      - name: Kirim ke Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          curl -sS -F chat_id="$TELEGRAM_CHAT_ID" -F supports_streaming=true -F video=@out/video.mp4 "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendVideo"
