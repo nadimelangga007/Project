@@ -10,9 +10,10 @@
       "place": "kota",
       "time": "siang",
       "action": "jalan",
-      "prop": "gelas",
+      "prop": "pedang",
       "cuaca": "cerah",
-      "mood": "normal"
+      "mood": "normal",
+      "pembawa": "ardi"
     },
     {
       "text": "Ini video pertamaku.",
@@ -20,11 +21,12 @@
       "audio": "audio/scene2.mp3",
       "seconds": 3.31,
       "place": "kota",
-      "time": "siang",
+      "time": "malam",
       "action": "jalan",
-      "prop": "tidak",
-      "cuaca": "cerah",
-      "mood": "normal"
+      "prop": "payung",
+      "cuaca": "hujan",
+      "mood": "normal",
+      "pembawa": "gadis"
     },
     {
       "text": "Halo dunia!",
@@ -34,9 +36,10 @@
       "place": "taman",
       "time": "pagi",
       "action": "bicara",
-      "prop": "tidak",
+      "prop": "buku",
       "cuaca": "cerah",
-      "mood": "normal"
+      "mood": "normal",
+      "pembawa": "gadis"
     },
     {
       "text": "Ini video pertamaku.",
@@ -45,10 +48,37 @@
       "seconds": 3.31,
       "place": "pantai",
       "time": "senja",
+      "action": "bicara",
+      "prop": "bunga",
+      "cuaca": "cerah",
+      "mood": "normal",
+      "pembawa": "gadis"
+    },
+    {
+      "text": "Halo dunia!",
+      "voice": "id-ID-ArdiNeural",
+      "audio": "audio/scene1.mp3",
+      "seconds": 2.42,
+      "place": "desa",
+      "time": "siang",
       "action": "jalan",
+      "prop": "tas",
+      "cuaca": "cerah",
+      "mood": "normal",
+      "pembawa": "ardi"
+    },
+    {
+      "text": "Ini video pertamaku.",
+      "voice": "id-ID-GadisNeural",
+      "audio": "audio/scene2.mp3",
+      "seconds": 3.31,
+      "place": "kafe",
+      "time": "senja",
+      "action": "bicara",
       "prop": "gelas",
       "cuaca": "cerah",
-      "mood": "normal"
+      "mood": "normal",
+      "pembawa": "ardi"
     }
   ]
 }

@@ -28,10 +28,11 @@ prompt = (
     "Kolom time pilih satu: pagi, siang, senja, malam. "
     "Isi place dan time sesuai tempat dan waktu kejadian tiap scene. "
     "Kolom action pilih satu: bicara (berdiri ngobrol) atau jalan (jalan bersama). "
-    "Kolom prop pilih satu: tidak atau gelas (pembicara memegang gelas). "
+    "Kolom prop pilih satu: tidak, gelas, pedang, payung, tas, buku, bunga (benda yang dibawa karakter sesuai cerita; kalau benda itu dibawa terus, isi sama di semua scene yang relevan). "
+    "Kolom pembawa pilih satu: ardi atau gadis (siapa yang membawa benda itu). "
     "Kolom cuaca pilih satu: cerah, mendung, hujan, salju, kabut. "
     "Kolom mood pilih satu: normal, ceria, sedih, tegang, seram (suasana hati adegan). "
-    'Balas HANYA JSON valid dengan bentuk: {"title": "...", "fps": 30, "scenes": [{"text": "...", "voice": "...", "place": "...", "time": "...", "action": "...", "prop": "...", "cuaca": "...", "mood": "..."}]}. '
+    'Balas HANYA JSON valid dengan bentuk: {"title": "...", "fps": 30, "scenes": [{"text": "...", "voice": "...", "place": "...", "time": "...", "action": "...", "prop": "...", "pembawa": "...", "cuaca": "...", "mood": "..."}]}. '
     "Ide: " + ide
 )
 
@@ -78,8 +79,10 @@ for i, s in enumerate(result["scenes"]):
         s["time"] = "siang"
     if s.get("action") not in ("bicara", "jalan"):
         s["action"] = "bicara"
-    if s.get("prop") not in ("tidak", "gelas"):
+    if s.get("prop") not in ("tidak", "gelas", "pedang", "payung", "tas", "buku", "bunga"):
         s["prop"] = "tidak"
+    if s.get("pembawa") not in ("ardi", "gadis"):
+        s["pembawa"] = "ardi"
     if s.get("cuaca") not in ("cerah", "mendung", "hujan", "salju", "kabut"):
         s["cuaca"] = "cerah"
     if s.get("mood") not in ("normal", "ceria", "sedih", "tegang", "seram"):

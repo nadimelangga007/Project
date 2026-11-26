@@ -160,7 +160,7 @@ const House = ({ time }) => {
   );
 };
 
-const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca, mood, walkStart }) => {
+const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca, mood, walkStart, pembawa }) => {
   const frame = useCurrentFrame();
   const male = voice.includes("Ardi");
   const t = SKIES[time] ? time : "senja";
@@ -186,27 +186,27 @@ const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca,
         
         <rect x="0" y="0" width="72" height="128" fill={TINT[t][0]} opacity={TINT[t][1]} />
         <Mood mood={mo} />
-        <Cast frame={frame} duration={duration} male={male} action={action} prop={prop} walkStart={walkStart} />
+        <Cast frame={frame} duration={duration} male={male} action={action} prop={prop} pembawa={pembawa} walkStart={walkStart} />
         {!INTERIORS.includes(p) && <Particles cuaca={cu} frame={frame} />}
         
       </svg>
       <div
         style={{
           position: "absolute",
-          left: 60,
-          right: 60,
-          top: 120,
-          background: "#f4f4f4",
-          color: "#1a1c2c",
-          border: "12px solid #ef7d57",
-          boxShadow: "0 16px 0 #5d275d",
-          padding: 40,
+          left: 36,
+          right: 36,
+          bottom: 90,
+          background: "rgba(16, 18, 40, 0.88)",
+          color: "#f4f4f4",
+          border: "6px solid #ef7d57",
+          boxShadow: "0 8px 0 #5d275d",
+          padding: "22px 30px",
           fontFamily,
-          fontSize: 40,
-          lineHeight: 1.7,
+          fontSize: 32,
+          lineHeight: 1.65,
         }}
       >
-        <div style={{ fontSize: 32, marginBottom: 20, color: male ? "#3b5dc9" : "#b13e53" }}>
+        <div style={{ fontSize: 26, marginBottom: 14, color: male ? "#73c6f9" : "#ff8fb0" }}>
           {male ? "ARDI" : "GADIS"}
         </div>
         <span>{text.slice(0, count)}</span>
@@ -241,6 +241,7 @@ export const Video = ({ story }) => {
               prop={scene.prop}
               cuaca={scene.cuaca}
               walkStart={wk}
+              pembawa={scene.pembawa}
               mood={scene.mood}
             />
           </Sequence>

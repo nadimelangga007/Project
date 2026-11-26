@@ -33,6 +33,14 @@ const GADIS = {
   long: true,
 };
 
+const HOLD = {
+  gelas: [25, 50],
+  pedang: [15, 35],
+  payung: [90, 90],
+  buku: [20, 60],
+  bunga: [15, 35],
+};
+
 const legAngles = (p) => {
   const q = ((p % 1) + 1) % 1;
   const f = 28 * Math.cos(2 * Math.PI * q);
@@ -63,7 +71,60 @@ const Arm = ({ up, lo, color, hand }) => (
   </g>
 );
 
-const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, hold }) => {
+const PropArt = ({ prop, frame }) => {
+  if (prop === "gelas") {
+    return (
+      <g>
+        <rect x="11" y="12.2" width="3.6" height="5" rx="0.6" fill="#f4f4f4" />
+        <rect x="11" y="13.8" width="3.6" height="1.6" fill="#d63a4a" />
+        <rect x={frame % 16 < 8 ? 12 : 13} y="9.2" width="0.7" height="1.8" rx="0.3" fill="#f4f4f4" opacity="0.8" />
+      </g>
+    );
+  }
+  if (prop === "pedang") {
+    return (
+      <g transform="translate(10.9, 18.7) rotate(-20)">
+        <rect x="-0.6" y="-17" width="1.2" height="16" fill="#dfe6ee" />
+        <rect x="-0.6" y="-17" width="0.5" height="16" fill="#ffffff" />
+        <polygon points="-0.6,-17 0.6,-17 0,-19.2" fill="#dfe6ee" />
+        <rect x="-2.4" y="-1.2" width="4.8" height="1.2" fill="#c9a24a" />
+        <rect x="-0.7" y="0" width="1.4" height="3" fill="#6b3a2a" />
+        <rect x="-0.9" y="3" width="1.8" height="1" fill="#c9a24a" />
+      </g>
+    );
+  }
+  if (prop === "payung") {
+    return (
+      <g transform="translate(10.5, 5)">
+        <rect x="-0.3" y="-12" width="0.6" height="14" fill="#6b4a3a" />
+        <path d="M-9 -9 Q0 -20 9 -9 Z" fill="#d63a4a" />
+        <path d="M-3 -9 Q-1 -16 0 -17 Q1 -16 3 -9 Z" fill="#f4f4f4" />
+      </g>
+    );
+  }
+  if (prop === "buku") {
+    return (
+      <g>
+        <rect x="11.2" y="12.2" width="5" height="6.4" fill="#41a6f6" />
+        <rect x="11.2" y="12.2" width="0.9" height="6.4" fill="#2f7fc4" />
+        <rect x="12.6" y="13.6" width="2.6" height="0.8" fill="#f4f4f4" />
+      </g>
+    );
+  }
+  if (prop === "bunga") {
+    return (
+      <g transform="translate(10.9, 18.7) rotate(-10)">
+        <rect x="-0.3" y="-10" width="0.6" height="10" fill="#2f9e57" />
+        <rect x="0.3" y="-5" width="2" height="1" fill="#2f9e57" />
+        <circle cx="0" cy="-11" r="1.8" fill="#e8618c" />
+        <circle cx="0" cy="-11" r="0.7" fill="#ffcd75" />
+      </g>
+    );
+  }
+  return null;
+};
+
+const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, prop }) => {
   const p = walk ? (((wf % CF) / CF) + (shift || 0)) % 1 : 0;
   const open = talking && Math.floor(frame / 4) % 2 === 0;
   const [fA, kA] = walk ? legAngles(p) : [4, 0];
@@ -72,7 +133,8 @@ const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, hold }) => {
   const bob = walk ? 14.8 * (1 - Math.cos(fs * D)) : open ? -0.5 : 0;
   const cN = Math.cos(2 * Math.PI * (p + 0.5));
   const cF = Math.cos(2 * Math.PI * p);
-  const armN = hold ? [25, 50] : walk ? [20 * cN, 14 + 0.5 * Math.max(0, 20 * cN)] : [3, 10];
+  const held = HOLD[prop];
+  const armN = held ? held : walk ? [20 * cN, 14 + 0.5 * Math.max(0, 20 * cN)] : [3, 10];
   const armF = walk ? [20 * cF, 14 + 0.5 * Math.max(0, 20 * cF)] : [-3, 10];
   const lean = walk ? 4 : 0;
   return (
@@ -87,9 +149,16 @@ const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, hold }) => {
         <Leg f={fA} k={kA} color={c.pants} shoe={c.shoe} />
         <g transform={`rotate(${lean} ${HIP[0]} ${HIP[1]})`}>
           <Arm up={armF[0]} lo={armF[1]} color={c.shirtDark} hand={c.skinDark} />
+          {prop === "tas" && (
+            <g>
+              <rect x="-1.2" y="10.5" width="4.6" height="9" rx="1.4" fill="#d63a4a" />
+              <rect x="-1.2" y="13.5" width="4.6" height="1" fill="#a82a38" />
+            </g>
+          )}
           {c.long && <rect x="1" y="3.2" width="3.8" height="12" rx="1.8" fill={c.hair} />}
           <rect x="2.2" y="9" width="7.4" height="12.4" rx="1.8" fill={c.shirt} />
           <rect x="1.6" y="10" width="3" height="8.6" rx="1.2" fill={c.shirtDark} />
+          {prop === "tas" && <rect x="3.4" y="9.5" width="1.3" height="8" fill="#a82a38" />}
           <rect x="4.8" y="7.4" width="2.6" height="2" fill={c.skin} />
           <circle cx="6" cy="4.2" r="4.2" fill={c.hair} />
           <circle cx="6.9" cy="4.9" r="3.7" fill={c.skin} />
@@ -98,13 +167,7 @@ const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, hold }) => {
           <circle cx="8.5" cy="4.4" r="0.55" fill="#1a1c2c" />
           <circle cx="10.5" cy="5.4" r="0.65" fill={c.skin} />
           <rect x="7.6" y="7.2" width="1.9" height={open ? 1.4 : 0.6} rx="0.3" fill="#b13e53" />
-          {hold && (
-            <g>
-              <rect x="11" y="12.2" width="3.6" height="5" rx="0.6" fill="#f4f4f4" />
-              <rect x="11" y="13.8" width="3.6" height="1.6" fill="#d63a4a" />
-              <rect x={frame % 16 < 8 ? 12 : 13} y="9.2" width="0.7" height="1.8" rx="0.3" fill="#f4f4f4" opacity="0.8" />
-            </g>
-          )}
+          <PropArt prop={prop} frame={frame} />
           <Arm up={armN[0]} lo={armN[1]} color={c.shirt} hand={c.skin} />
         </g>
       </g>
@@ -112,23 +175,25 @@ const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, hold }) => {
   );
 };
 
-export const Cast = ({ frame, duration, male, action, prop, walkStart }) => {
+export const Cast = ({ frame, duration, male, action, prop, pembawa, walkStart }) => {
   const y = 103 - 36 * S;
   const walk = action === "jalan";
-  const hold = prop === "gelas";
+  const has = prop && prop !== "tidak";
+  const pa = has && pembawa !== "gadis" ? prop : "tidak";
+  const pg = has && pembawa === "gadis" ? prop : "tidak";
   if (walk) {
     const wf = (walkStart || 0) + frame;
     return (
       <g>
-        <Person x={18} y={y} c={GADIS} frame={frame} wf={wf} walk shift={0.5} talking={!male} hold={hold && !male} />
-        <Person x={40} y={y} c={ARDI} frame={frame} wf={wf} walk shift={0} talking={male} hold={hold && male} />
+        <Person x={18} y={y} c={GADIS} frame={frame} wf={wf} walk shift={0.5} talking={!male} prop={pg} />
+        <Person x={40} y={y} c={ARDI} frame={frame} wf={wf} walk shift={0} talking={male} prop={pa} />
       </g>
     );
   }
   return (
     <g>
-      <Person x={22} y={y} c={ARDI} frame={frame} wf={0} talking={male} hold={hold && male} />
-      <Person x={39} y={y} flip c={GADIS} frame={frame} wf={0} talking={!male} hold={hold && !male} />
+      <Person x={22} y={y} c={ARDI} frame={frame} wf={0} talking={male} prop={pa} />
+      <Person x={39} y={y} flip c={GADIS} frame={frame} wf={0} talking={!male} prop={pg} />
     </g>
   );
 };
