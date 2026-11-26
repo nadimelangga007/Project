@@ -10,6 +10,7 @@ import {
 } from "remotion";
 import { loadFont } from "@remotion/google-fonts/PressStart2P";
 import { Cast } from "./Char";
+import { Room } from "./Room";
 
 const { fontFamily } = loadFont();
 
@@ -163,15 +164,15 @@ const Scene = ({ text, audio, voice, duration, place, time, action, prop }) => {
       <svg
         width="1080"
         height="1920"
-        viewBox="0 0 180 320"
+        viewBox="0 0 72 128"
         shapeRendering="crispEdges"
         style={{ position: "absolute", left: 0, top: 0 }}
       >
-        {p !== "rumah" && <Sky time={t} frame={frame} />}
+        {p === "rumah" ? <Room time={t} /> : (<svg x="0" y="0" width="72" height="128" viewBox="0 0 180 320" preserveAspectRatio="none"><Sky time={t} frame={frame} />
         {p === "kota" && <City time={t} />}
-        {p === "taman" && <Park />}
-        {p === "rumah" && <House time={t} />}
-        <rect x="0" y="0" width="180" height="320" fill={TINT[t][0]} opacity={TINT[t][1]} />
+        {p === "taman" && <Park />}</svg>)}
+        
+        <rect x="0" y="0" width="72" height="128" fill={TINT[t][0]} opacity={TINT[t][1]} />
         <Cast frame={frame} duration={duration} male={male} action={action} prop={prop} />
         
       </svg>

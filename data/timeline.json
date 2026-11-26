@@ -7,7 +7,7 @@
       "voice": "id-ID-ArdiNeural",
       "audio": "audio/scene1.mp3",
       "seconds": 2.42,
-      "place": "kota",
+      "place": "rumah",
       "time": "siang",
       "action": "jalan",
       "prop": "gelas"
@@ -18,7 +18,7 @@
       "audio": "audio/scene2.mp3",
       "seconds": 3.31,
       "place": "rumah",
-      "time": "pagi",
+      "time": "malam",
       "action": "bicara",
       "prop": "tidak"
     }
