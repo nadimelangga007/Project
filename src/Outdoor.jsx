@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { SceneCtx, skyMix } from "./Weather";
 
 const SKY7 = {
   pagi: ["#9fdcf0", "#b9e8f2", "#d4f0e4", "#f0f2c8", "#ffe9a8", "#ffd98a", "#ffc971"],
@@ -17,26 +18,30 @@ const CLOUDS = [[4, 50], [38, 62], [18, 74]];
 
 const OutSky = ({ time, frame }) => {
   const [sx, sy, sc] = SUN[time];
+  const { cuaca } = useContext(SceneCtx);
+  const clear = !cuaca || cuaca === "cerah";
+  const bands = skyMix(SKY7[time], cuaca, time);
+  const cloud = clear ? "#ffffff" : time === "malam" ? "#2a3048" : time === "senja" ? "#6a5a70" : "#8a95a5";
   return (
     <g>
-      {SKY7[time].map((c, i) => (
+      {bands.map((c, i) => (
         <rect key={i} x="0" y={i * 15} width="72" height="15" fill={c} />
       ))}
-      {time === "malam" &&
+      {time === "malam" && clear &&
         STARS.map(([x, y], i) =>
           (frame + i * 9) % 36 < 28 ? (
             <rect key={i} x={x} y={y} width="1" height="1" fill="#ffffff" />
           ) : null
         )}
-      <rect x={sx + 1} y={sy} width="5" height="7" fill={sc} />
-      <rect x={sx} y={sy + 1} width="7" height="5" fill={sc} />
-      {(time === "pagi" || time === "siang") &&
+      {clear && <rect x={sx + 1} y={sy} width="5" height="7" fill={sc} />}
+      {clear && <rect x={sx} y={sy + 1} width="7" height="5" fill={sc} />}
+      {(time === "pagi" || time === "siang" || !clear) &&
         CLOUDS.map(([cx, cy], i) => {
           const x = cx + Math.floor(frame / 14);
           return (
             <g key={i}>
-              <rect x={x} y={cy} width="12" height="3" fill="#ffffff" />
-              <rect x={x + 3} y={cy - 2} width="6" height="2" fill="#ffffff" />
+              <rect x={x} y={cy} width="12" height="3" fill={cloud} />
+              <rect x={x + 3} y={cy - 2} width="6" height="2" fill={cloud} />
             </g>
           );
         })}

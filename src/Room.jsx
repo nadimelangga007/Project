@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { SceneCtx, skyMix } from "./Weather";
 
 const SKY3 = {
   pagi: ["#9fdcf0", "#d4f0e4", "#ffe9a8"],
@@ -49,7 +50,8 @@ const Leaf = ({ l }) => {
 };
 
 export const Room = ({ time }) => {
-  const sky = SKY3[time] || SKY3.siang;
+  const w = useContext(SceneCtx);
+  const sky = skyMix(SKY3[time] || SKY3.siang, w.cuaca, time);
   const lit = time === "malam" || time === "senja";
   const day = time === "pagi" || time === "siang";
   const dots = lit ? "#ffcd75" : "#8aa0c4";

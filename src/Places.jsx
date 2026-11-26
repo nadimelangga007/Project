@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { SceneCtx, skyMix } from "./Weather";
 import { Room } from "./Room";
 
 const SKY3 = {
@@ -9,7 +10,8 @@ const SKY3 = {
 };
 
 const Win = ({ x, y, w, h, time }) => {
-  const s = SKY3[time] || SKY3.siang;
+  const ctx = useContext(SceneCtx);
+  const s = skyMix(SKY3[time] || SKY3.siang, ctx.cuaca, time);
   const half = (h - 4) / 2;
   return (
     <g>

@@ -7,30 +7,12 @@
       "voice": "id-ID-ArdiNeural",
       "audio": "audio/scene1.mp3",
       "seconds": 2.42,
-      "place": "desa",
-      "time": "pagi",
+      "place": "kota",
+      "time": "malam",
       "action": "bicara",
-      "prop": "tidak"
-    },
-    {
-      "text": "Ini video pertamaku.",
-      "voice": "id-ID-GadisNeural",
-      "audio": "audio/scene2.mp3",
-      "seconds": 3.31,
-      "place": "pantai",
-      "time": "senja",
-      "action": "bicara",
-      "prop": "tidak"
-    },
-    {
-      "text": "Halo dunia!",
-      "voice": "id-ID-ArdiNeural",
-      "audio": "audio/scene1.mp3",
-      "seconds": 2.42,
-      "place": "hutan",
-      "time": "siang",
-      "action": "bicara",
-      "prop": "tidak"
+      "prop": "tidak",
+      "cuaca": "hujan",
+      "mood": "sedih"
     },
     {
       "text": "Ini video pertamaku.",
@@ -38,9 +20,35 @@
       "audio": "audio/scene2.mp3",
       "seconds": 3.31,
       "place": "gunung",
+      "time": "siang",
+      "action": "bicara",
+      "prop": "tidak",
+      "cuaca": "salju",
+      "mood": "normal"
+    },
+    {
+      "text": "Halo dunia!",
+      "voice": "id-ID-ArdiNeural",
+      "audio": "audio/scene1.mp3",
+      "seconds": 2.42,
+      "place": "kamar",
       "time": "malam",
       "action": "bicara",
-      "prop": "tidak"
+      "prop": "tidak",
+      "cuaca": "cerah",
+      "mood": "seram"
+    },
+    {
+      "text": "Ini video pertamaku.",
+      "voice": "id-ID-GadisNeural",
+      "audio": "audio/scene2.mp3",
+      "seconds": 3.31,
+      "place": "taman",
+      "time": "pagi",
+      "action": "bicara",
+      "prop": "tidak",
+      "cuaca": "kabut",
+      "mood": "ceria"
     }
   ]
 }

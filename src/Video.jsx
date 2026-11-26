@@ -12,6 +12,7 @@ import { loadFont } from "@remotion/google-fonts/PressStart2P";
 import { Cast } from "./Char";
 import { Interior, INTERIORS } from "./Places";
 import { Outdoor, OUTDOORS } from "./Outdoor";
+import { SceneCtx, Mood, Particles, CUACA, MOODS } from "./Weather";
 
 const { fontFamily } = loadFont();
 
@@ -149,11 +150,13 @@ const House = ({ time }) => {
   );
 };
 
-const Scene = ({ text, audio, voice, duration, place, time, action, prop }) => {
+const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca, mood }) => {
   const frame = useCurrentFrame();
   const male = voice.includes("Ardi");
   const t = SKIES[time] ? time : "senja";
   const p = PLACES.includes(place) ? place : "kota";
+  const cu = CUACA.includes(cuaca) ? cuaca : "cerah";
+  const mo = MOODS.includes(mood) ? mood : "normal";
   const count = Math.floor(
     interpolate(frame, [0, duration * 0.7], [0, text.length], {
       extrapolateRight: "clamp",
@@ -169,10 +172,12 @@ const Scene = ({ text, audio, voice, duration, place, time, action, prop }) => {
         shapeRendering="crispEdges"
         style={{ position: "absolute", left: 0, top: 0 }}
       >
-        {INTERIORS.includes(p) ? <Interior place={p} time={t} /> : <Outdoor place={p} time={t} frame={frame} />}
+        <SceneCtx.Provider value={{ cuaca: cu }}>{INTERIORS.includes(p) ? <Interior place={p} time={t} /> : <Outdoor place={p} time={t} frame={frame} />}</SceneCtx.Provider>
         
         <rect x="0" y="0" width="72" height="128" fill={TINT[t][0]} opacity={TINT[t][1]} />
+        <Mood mood={mo} />
         <Cast frame={frame} duration={duration} male={male} action={action} prop={prop} />
+        {!INTERIORS.includes(p) && <Particles cuaca={cu} frame={frame} />}
         
       </svg>
       <div
@@ -221,6 +226,8 @@ export const Video = ({ story }) => {
               time={scene.time}
               action={scene.action}
               prop={scene.prop}
+              cuaca={scene.cuaca}
+              mood={scene.mood}
             />
           </Sequence>
         );

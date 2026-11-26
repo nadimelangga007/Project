@@ -29,7 +29,9 @@ prompt = (
     "Isi place dan time sesuai tempat dan waktu kejadian tiap scene. "
     "Kolom action pilih satu: bicara (berdiri ngobrol) atau jalan (jalan bersama). "
     "Kolom prop pilih satu: tidak atau gelas (pembicara memegang gelas). "
-    'Balas HANYA JSON valid dengan bentuk: {"title": "...", "fps": 30, "scenes": [{"text": "...", "voice": "...", "place": "...", "time": "...", "action": "...", "prop": "..."}]}. '
+    "Kolom cuaca pilih satu: cerah, mendung, hujan, salju, kabut. "
+    "Kolom mood pilih satu: normal, ceria, sedih, tegang, seram (suasana hati adegan). "
+    'Balas HANYA JSON valid dengan bentuk: {"title": "...", "fps": 30, "scenes": [{"text": "...", "voice": "...", "place": "...", "time": "...", "action": "...", "prop": "...", "cuaca": "...", "mood": "..."}]}. '
     "Ide: " + ide
 )
 
@@ -78,6 +80,10 @@ for i, s in enumerate(result["scenes"]):
         s["action"] = "bicara"
     if s.get("prop") not in ("tidak", "gelas"):
         s["prop"] = "tidak"
+    if s.get("cuaca") not in ("cerah", "mendung", "hujan", "salju", "kabut"):
+        s["cuaca"] = "cerah"
+    if s.get("mood") not in ("normal", "ceria", "sedih", "tegang", "seram"):
+        s["mood"] = "normal"
 result["fps"] = 30
 result.setdefault("title", "Video")
 
@@ -86,4 +92,4 @@ with open("data/story.json", "w", encoding="utf-8") as f:
 
 print("Naskah:", len(result["scenes"]), "scene")
 for s in result["scenes"]:
-    print("-", s["voice"].replace("id-ID-", "").replace("Neural", ""), s["place"], s["time"], ":", s["text"])
+    print("-", s["voice"].replace("id-ID-", "").replace("Neural", ""), s["place"], s["time"], s["cuaca"], s["mood"], ":", s["text"])
