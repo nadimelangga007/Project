@@ -10,7 +10,7 @@ import {
 } from "remotion";
 import { loadFont } from "@remotion/google-fonts/PressStart2P";
 import { Cast } from "./Char";
-import { Room } from "./Room";
+import { Interior, INTERIORS } from "./Places";
 
 const { fontFamily } = loadFont();
 
@@ -38,7 +38,7 @@ const BUILDINGS = [
 ];
 const STARS = [[12, 8], [40, 22], [70, 10], [100, 30], [130, 14], [160, 26], [25, 46], [150, 52], [85, 55]];
 const CLOUDS = [[18, 50], [104, 76], [52, 108]];
-const PLACES = ["kota", "rumah", "taman"];
+const PLACES = ["kota", "rumah", "taman", "kamar", "kelas", "kafe"];
 
 const Sky = ({ time, frame }) => {
   const [sx, sy, sc] = SUN[time];
@@ -168,7 +168,7 @@ const Scene = ({ text, audio, voice, duration, place, time, action, prop }) => {
         shapeRendering="crispEdges"
         style={{ position: "absolute", left: 0, top: 0 }}
       >
-        {p === "rumah" ? <Room time={t} /> : (<svg x="0" y="0" width="72" height="128" viewBox="0 0 180 320" preserveAspectRatio="none"><Sky time={t} frame={frame} />
+        {INTERIORS.includes(p) ? <Interior place={p} time={t} /> : (<svg x="0" y="0" width="72" height="128" viewBox="0 0 180 320" preserveAspectRatio="none"><Sky time={t} frame={frame} />
         {p === "kota" && <City time={t} />}
         {p === "taman" && <Park />}</svg>)}
         

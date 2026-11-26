@@ -7,10 +7,30 @@
       "voice": "id-ID-ArdiNeural",
       "audio": "audio/scene1.mp3",
       "seconds": 2.42,
-      "place": "rumah",
+      "place": "kamar",
+      "time": "malam",
+      "action": "bicara",
+      "prop": "tidak"
+    },
+    {
+      "text": "Ini video pertamaku.",
+      "voice": "id-ID-GadisNeural",
+      "audio": "audio/scene2.mp3",
+      "seconds": 3.31,
+      "place": "kelas",
       "time": "siang",
-      "action": "jalan",
-      "prop": "gelas"
+      "action": "bicara",
+      "prop": "tidak"
+    },
+    {
+      "text": "Halo dunia!",
+      "voice": "id-ID-ArdiNeural",
+      "audio": "audio/scene1.mp3",
+      "seconds": 2.42,
+      "place": "kafe",
+      "time": "senja",
+      "action": "bicara",
+      "prop": "tidak"
     },
     {
       "text": "Ini video pertamaku.",
@@ -18,7 +38,7 @@
       "audio": "audio/scene2.mp3",
       "seconds": 3.31,
       "place": "rumah",
-      "time": "malam",
+      "time": "pagi",
       "action": "bicara",
       "prop": "tidak"
     }
