@@ -9,7 +9,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { loadFont } from "@remotion/google-fonts/PressStart2P";
-import { Cast, S as CHAR_S, STRIDE, CF } from "./Char";
+import { Cast, S as CHAR_S, STRIDE, CF, DEFAULT_KARAKTER } from "./Char";
 import { Interior, INTERIORS } from "./Places";
 import { Outdoor, OUTDOORS } from "./Outdoor";
 import { SceneCtx, Mood, Particles, CUACA, MOODS } from "./Weather";
@@ -160,9 +160,12 @@ const House = ({ time }) => {
   );
 };
 
-const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca, mood, walkStart, pembawa }) => {
+const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca, mood, walkStart, pembawa, karakter, bicara, ekspresi, reaksi }) => {
   const frame = useCurrentFrame();
-  const male = voice.includes("Ardi");
+  const chars = karakter && karakter.length ? karakter : DEFAULT_KARAKTER;
+  const spIdx = Number.isInteger(bicara) ? Math.min(Math.max(bicara, 0), chars.length - 1) : voice.includes("Gadis") ? 1 : 0;
+  const nama = String((chars[spIdx] && chars[spIdx].nama) || (spIdx === 1 ? "Gadis" : "Ardi")).toUpperCase();
+  const male = spIdx === 0;
   const t = SKIES[time] ? time : "senja";
   const p = PLACES.includes(place) ? place : "kota";
   const cu = CUACA.includes(cuaca) ? cuaca : "cerah";
@@ -186,7 +189,7 @@ const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca,
         
         <rect x="0" y="0" width="72" height="128" fill={TINT[t][0]} opacity={TINT[t][1]} />
         <Mood mood={mo} />
-        <Cast frame={frame} duration={duration} male={male} action={action} prop={prop} pembawa={pembawa} walkStart={walkStart} />
+        <Cast frame={frame} karakter={karakter} bicara={spIdx} ekspresi={ekspresi} reaksi={reaksi} action={action} prop={prop} pembawa={pembawa} walkStart={walkStart} />
         {!INTERIORS.includes(p) && <Particles cuaca={cu} frame={frame} />}
         
       </svg>
@@ -206,8 +209,8 @@ const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca,
           lineHeight: 1.65,
         }}
       >
-        <div style={{ fontSize: 26, marginBottom: 14, color: male ? "#73c6f9" : "#ff8fb0" }}>
-          {male ? "ARDI" : "GADIS"}
+        <div style={{ fontSize: 26, marginBottom: 14, color: ["#73c6f9", "#ff8fb0", "#a8f070"][spIdx] }}>
+          {nama}
         </div>
         <span>{text.slice(0, count)}</span>
         <span style={{ opacity: 0 }}>{text.slice(count)}</span>
@@ -242,6 +245,10 @@ export const Video = ({ story }) => {
               cuaca={scene.cuaca}
               walkStart={wk}
               pembawa={scene.pembawa}
+              karakter={story.karakter}
+              bicara={scene.pembicara}
+              ekspresi={scene.ekspresi}
+              reaksi={scene.reaksi}
               mood={scene.mood}
             />
           </Sequence>

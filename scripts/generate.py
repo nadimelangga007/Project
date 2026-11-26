@@ -9,8 +9,13 @@ with open("data/story.json", encoding="utf-8") as f:
 
 for i, scene in enumerate(story["scenes"]):
     name = f"audio/scene{i + 1}.mp3"
-    cmd = ["edge-tts", "--voice", scene["voice"], "--text", scene["text"], "--write-media", "public/" + name]
-    subprocess.run(cmd, check=True)
+    base = ["edge-tts", "--voice", scene["voice"], "--text", scene["text"], "--write-media", "public/" + name]
+    pitch = scene.get("pitch")
+    extra = ["--pitch=" + pitch] if pitch and pitch != "+0Hz" else []
+    try:
+        subprocess.run(base + extra, check=True)
+    except subprocess.CalledProcessError:
+        subprocess.run(base, check=True)
     length = MP3("public/" + name).info.length
     scene["audio"] = name
     scene["seconds"] = round(length + PAD, 2)

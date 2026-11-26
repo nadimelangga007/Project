@@ -1,4 +1,5 @@
 import React from "react";
+import { Face } from "./Face";
 
 const W = 12;
 export const S = 0.85;
@@ -7,30 +8,62 @@ export const CF = 48;
 export const STRIDE = 26;
 const HIP = [5.5, 21.2];
 const SH = [5.5, 10.4];
+const SKIN = "#f3b83f";
+const SKIN_D = "#d9a53e";
 
-const ARDI = {
-  hair: "#6a2a5c",
-  skin: "#f3b83f",
-  skinDark: "#d9a53e",
-  shirt: "#3f6fd1",
-  shirtDark: "#2f55a8",
-  pants: "#1e2a6b",
-  pantsDark: "#16205a",
-  shoe: "#f4f4f4",
-  shoeDark: "#c9d3e0",
-  long: false,
+const BAJU = {
+  biru: ["#3f6fd1", "#2f55a8"],
+  merah: ["#d63a4a", "#a82a38"],
+  hijau: ["#38b764", "#257a45"],
+  kuning: ["#ffcd75", "#d9a441"],
+  ungu: ["#8a4fd1", "#6a3aa8"],
+  pink: ["#e8618c", "#c24a70"],
+  oranye: ["#ef7d57", "#c9552b"],
+  hitam: ["#3a3f52", "#262a3a"],
+  putih: ["#f4f4f4", "#c9d3e0"],
+  abu: ["#8a93a8", "#6d7a90"],
 };
-const GADIS = {
-  hair: "#4a2a6e",
-  skin: "#f3b83f",
-  skinDark: "#d9a53e",
-  shirt: "#e8618c",
-  shirtDark: "#c24a70",
-  pants: "#3a3f7a",
-  pantsDark: "#2c3062",
-  shoe: "#f4f4f4",
-  shoeDark: "#c9d3e0",
-  long: true,
+const CELANA = {
+  biru: ["#1e2a6b", "#16205a"],
+  hitam: ["#2a2d3e", "#1c1f2c"],
+  cokelat: ["#7a4e3a", "#5d3a2c"],
+  abu: ["#6d7a90", "#566078"],
+  hijau: ["#2f6b45", "#235236"],
+};
+const RAMBUT = {
+  hitam: "#2a2030",
+  cokelat: "#6b3a2a",
+  pirang: "#e0b050",
+  merah: "#b13e2a",
+  ungu: "#5a2a5c",
+  abu: "#b8bcc8",
+  biru: "#3a4a9a",
+};
+const GAYA = ["pendek", "panjang", "kuncir", "botak"];
+
+export const DEFAULT_KARAKTER = [
+  { nama: "Ardi", gender: "cowok", baju: "biru", celana: "biru", rambut: "ungu", gaya_rambut: "pendek", aksesori: "tidak" },
+  { nama: "Gadis", gender: "cewek", baju: "pink", celana: "biru", rambut: "ungu", gaya_rambut: "panjang", aksesori: "tidak" },
+];
+
+const buildChar = (k) => {
+  const baju = BAJU[k.baju] || BAJU.biru;
+  const cel = CELANA[k.celana] || CELANA.biru;
+  const gaya = GAYA.includes(k.gaya_rambut) ? k.gaya_rambut : k.gender === "cewek" ? "panjang" : "pendek";
+  return {
+    hair: gaya === "botak" ? SKIN : RAMBUT[k.rambut] || RAMBUT.hitam,
+    hairStyle: gaya,
+    skin: SKIN,
+    skinDark: SKIN_D,
+    shirt: baju[0],
+    shirtDark: baju[1],
+    pants: cel[0],
+    pantsDark: cel[1],
+    shoe: "#f4f4f4",
+    shoeDark: "#c9d3e0",
+    acc: k.aksesori || "tidak",
+    cap: baju[0],
+  };
 };
 
 const HOLD = {
@@ -124,7 +157,7 @@ const PropArt = ({ prop, frame }) => {
   return null;
 };
 
-const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, prop }) => {
+const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, expr, prop }) => {
   const p = walk ? (((wf % CF) / CF) + (shift || 0)) % 1 : 0;
   const open = talking && Math.floor(frame / 4) % 2 === 0;
   const [fA, kA] = walk ? legAngles(p) : [4, 0];
@@ -137,6 +170,8 @@ const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, prop }) => {
   const armN = held ? held : walk ? [20 * cN, 14 + 0.5 * Math.max(0, 20 * cN)] : [3, 10];
   const armF = walk ? [20 * cF, 14 + 0.5 * Math.max(0, 20 * cF)] : [-3, 10];
   const lean = walk ? 4 : 0;
+  const topi = c.acc === "topi" || c.acc === "keduanya";
+  const kaca = c.acc === "kacamata" || c.acc === "keduanya";
   return (
     <g
       transform={`translate(${flip ? x + W * S : x}, ${y}) scale(${flip ? -S : S}, ${S})`}
@@ -155,18 +190,35 @@ const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, prop }) => {
               <rect x="-1.2" y="13.5" width="4.6" height="1" fill="#a82a38" />
             </g>
           )}
-          {c.long && <rect x="1" y="3.2" width="3.8" height="12" rx="1.8" fill={c.hair} />}
+          {c.hairStyle === "panjang" && <rect x="1" y="3.2" width="3.8" height="12" rx="1.8" fill={c.hair} />}
+          {c.hairStyle === "kuncir" && (
+            <g>
+              <rect x="-0.8" y="3.6" width="2.6" height="6.5" rx="1.3" fill={c.hair} />
+              <rect x="0.6" y="3.2" width="1.6" height="1.3" fill="#d63a4a" />
+            </g>
+          )}
           <rect x="2.2" y="9" width="7.4" height="12.4" rx="1.8" fill={c.shirt} />
           <rect x="1.6" y="10" width="3" height="8.6" rx="1.2" fill={c.shirtDark} />
           {prop === "tas" && <rect x="3.4" y="9.5" width="1.3" height="8" fill="#a82a38" />}
           <rect x="4.8" y="7.4" width="2.6" height="2" fill={c.skin} />
           <circle cx="6" cy="4.2" r="4.2" fill={c.hair} />
           <circle cx="6.9" cy="4.9" r="3.7" fill={c.skin} />
-          <ellipse cx="8.2" cy="1.9" rx="2.3" ry="1.1" fill={c.hair} />
+          {c.hairStyle !== "botak" && <ellipse cx="8.2" cy="1.9" rx="2.3" ry="1.1" fill={c.hair} />}
           <circle cx="5.2" cy="5" r="0.8" fill={c.skinDark} />
-          <circle cx="8.5" cy="4.4" r="0.55" fill="#1a1c2c" />
           <circle cx="10.5" cy="5.4" r="0.65" fill={c.skin} />
-          <rect x="7.6" y="7.2" width="1.9" height={open ? 1.4 : 0.6} rx="0.3" fill="#b13e53" />
+          <Face expr={expr} open={open} />
+          {topi && (
+            <g>
+              <ellipse cx="5.8" cy="1.6" rx="4.6" ry="2.4" fill={c.cap} />
+              <rect x="8.6" y="2.7" width="4.2" height="1" rx="0.4" fill={c.cap} />
+            </g>
+          )}
+          {kaca && (
+            <g>
+              <rect x="7.2" y="3.3" width="3.2" height="2.4" rx="1" fill="#bfe6ff" fillOpacity="0.45" stroke="#1a1c2c" strokeWidth="0.45" />
+              <rect x="4.6" y="4.1" width="2.7" height="0.5" fill="#1a1c2c" />
+            </g>
+          )}
           <PropArt prop={prop} frame={frame} />
           <Arm up={armN[0]} lo={armN[1]} color={c.shirt} hand={c.skin} />
         </g>
@@ -175,25 +227,37 @@ const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, prop }) => {
   );
 };
 
-export const Cast = ({ frame, duration, male, action, prop, pembawa, walkStart }) => {
+export const Cast = ({ frame, karakter, bicara, ekspresi, reaksi, action, prop, pembawa, walkStart }) => {
+  const list = (karakter && karakter.length ? karakter : DEFAULT_KARAKTER).slice(0, 3);
+  const chars = list.map(buildChar);
+  const n = chars.length;
   const y = 103 - 36 * S;
   const walk = action === "jalan";
+  const sp = Math.min(Math.max(Number.isInteger(bicara) ? bicara : 0, 0), n - 1);
+  const pbRaw = typeof pembawa === "number" ? pembawa : pembawa === "gadis" ? 1 : 0;
+  const pb = Math.min(Math.max(pbRaw, 0), n - 1);
   const has = prop && prop !== "tidak";
-  const pa = has && pembawa !== "gadis" ? prop : "tidak";
-  const pg = has && pembawa === "gadis" ? prop : "tidak";
+  const ex = (i) => (i === sp ? ekspresi : reaksi) || "netral";
+  const pr = (i) => (has && i === pb ? prop : "tidak");
   if (walk) {
     const wf = (walkStart || 0) + frame;
+    const xs = n === 1 ? [28] : n === 2 ? [40, 18] : [46, 28, 10];
+    const sh = [0, 0.5, 0.25];
     return (
       <g>
-        <Person x={18} y={y} c={GADIS} frame={frame} wf={wf} walk shift={0.5} talking={!male} prop={pg} />
-        <Person x={40} y={y} c={ARDI} frame={frame} wf={wf} walk shift={0} talking={male} prop={pa} />
+        {chars.map((c, i) => (
+          <Person key={i} x={xs[i]} y={y} c={c} frame={frame} wf={wf} walk shift={sh[i]} talking={i === sp} expr={ex(i)} prop={pr(i)} />
+        ))}
       </g>
     );
   }
+  const xs = n === 1 ? [30] : n === 2 ? [22, 39] : [13, 31, 49];
+  const flips = n === 1 ? [false] : n === 2 ? [false, true] : [false, sp === 0, true];
   return (
     <g>
-      <Person x={22} y={y} c={ARDI} frame={frame} wf={0} talking={male} prop={pa} />
-      <Person x={39} y={y} flip c={GADIS} frame={frame} wf={0} talking={!male} prop={pg} />
+      {chars.map((c, i) => (
+        <Person key={i} x={xs[i]} y={y} flip={flips[i]} c={c} frame={frame} wf={0} talking={i === sp} expr={ex(i)} prop={pr(i)} />
+      ))}
     </g>
   );
 };
