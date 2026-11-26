@@ -9,12 +9,22 @@ import {
   useVideoConfig,
 } from "remotion";
 import { loadFont } from "@remotion/google-fonts/PressStart2P";
-import { Cast } from "./Char";
+import { Cast, S as CHAR_S, STRIDE, CF } from "./Char";
 import { Interior, INTERIORS } from "./Places";
 import { Outdoor, OUTDOORS } from "./Outdoor";
 import { SceneCtx, Mood, Particles, CUACA, MOODS } from "./Weather";
 
 const { fontFamily } = loadFont();
+
+const Pan = ({ sc, children }) => {
+  const m = sc % 72;
+  return (
+    <g>
+      <g transform={`translate(${-m}, 0)`}>{children}</g>
+      <g transform={`translate(${72 - m}, 0)`}>{children}</g>
+    </g>
+  );
+};
 
 const SKIES = {
   pagi: ["#9fdcf0", "#b9e8f2", "#d4f0e4", "#f0f2c8", "#ffe9a8", "#ffd98a", "#ffc971"],
@@ -150,7 +160,7 @@ const House = ({ time }) => {
   );
 };
 
-const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca, mood }) => {
+const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca, mood, walkStart }) => {
   const frame = useCurrentFrame();
   const male = voice.includes("Ardi");
   const t = SKIES[time] ? time : "senja";
@@ -172,11 +182,11 @@ const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca,
         shapeRendering="crispEdges"
         style={{ position: "absolute", left: 0, top: 0 }}
       >
-        <SceneCtx.Provider value={{ cuaca: cu }}>{INTERIORS.includes(p) ? <Interior place={p} time={t} /> : <Outdoor place={p} time={t} frame={frame} />}</SceneCtx.Provider>
+        <SceneCtx.Provider value={{ cuaca: cu }}><Pan sc={action === "jalan" ? ((walkStart + frame) * CHAR_S * STRIDE) / CF : 0}>{INTERIORS.includes(p) ? <Interior place={p} time={t} /> : <Outdoor place={p} time={t} frame={frame} />}</Pan></SceneCtx.Provider>
         
         <rect x="0" y="0" width="72" height="128" fill={TINT[t][0]} opacity={TINT[t][1]} />
         <Mood mood={mo} />
-        <Cast frame={frame} duration={duration} male={male} action={action} prop={prop} />
+        <Cast frame={frame} duration={duration} male={male} action={action} prop={prop} walkStart={walkStart} />
         {!INTERIORS.includes(p) && <Particles cuaca={cu} frame={frame} />}
         
       </svg>
@@ -209,12 +219,15 @@ const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca,
 export const Video = ({ story }) => {
   const { fps } = useVideoConfig();
   let start = 0;
+  let walked = 0;
   return (
     <AbsoluteFill style={{ backgroundColor: "#1a1c2c" }}>
       {story.scenes.map((scene, i) => {
         const duration = Math.round(scene.seconds * fps);
         const from = start;
         start += duration;
+        const wk = walked;
+        if (scene.action === "jalan") walked += duration;
         return (
           <Sequence key={i} from={from} durationInFrames={duration}>
             <Scene
@@ -227,6 +240,7 @@ export const Video = ({ story }) => {
               action={scene.action}
               prop={scene.prop}
               cuaca={scene.cuaca}
+              walkStart={wk}
               mood={scene.mood}
             />
           </Sequence>

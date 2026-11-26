@@ -1,9 +1,10 @@
 import React from "react";
 
 const W = 12;
+export const S = 0.85;
 const D = Math.PI / 180;
-const CF = 48;
-const STRIDE = 26;
+export const CF = 48;
+export const STRIDE = 26;
 const HIP = [5.5, 21.2];
 const SH = [5.5, 10.4];
 
@@ -62,8 +63,8 @@ const Arm = ({ up, lo, color, hand }) => (
   </g>
 );
 
-const Person = ({ x, y, flip, c, frame, walk, shift, talking, hold }) => {
-  const p = walk ? (((frame % CF) / CF) + (shift || 0)) % 1 : 0;
+const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, hold }) => {
+  const p = walk ? (((wf % CF) / CF) + (shift || 0)) % 1 : 0;
   const open = talking && Math.floor(frame / 4) % 2 === 0;
   const [fA, kA] = walk ? legAngles(p) : [4, 0];
   const [fB, kB] = walk ? legAngles(p + 0.5) : [-4, 0];
@@ -76,7 +77,7 @@ const Person = ({ x, y, flip, c, frame, walk, shift, talking, hold }) => {
   const lean = walk ? 4 : 0;
   return (
     <g
-      transform={`translate(${flip ? x + W : x}, ${y}) scale(${flip ? -1 : 1}, 1)`}
+      transform={`translate(${flip ? x + W * S : x}, ${y}) scale(${flip ? -S : S}, ${S})`}
       opacity={1}
       shapeRendering="geometricPrecision"
     >
@@ -111,23 +112,23 @@ const Person = ({ x, y, flip, c, frame, walk, shift, talking, hold }) => {
   );
 };
 
-export const Cast = ({ frame, duration, male, action, prop }) => {
-  const y = 67;
+export const Cast = ({ frame, duration, male, action, prop, walkStart }) => {
+  const y = 103 - 36 * S;
   const walk = action === "jalan";
   const hold = prop === "gelas";
   if (walk) {
-    const dx = ((frame - duration) * STRIDE) / CF;
+    const wf = (walkStart || 0) + frame;
     return (
       <g>
-        <Person x={22 + dx} y={y} c={GADIS} frame={frame} walk shift={0.5} talking={!male} hold={hold && !male} />
-        <Person x={44 + dx} y={y} c={ARDI} frame={frame} walk shift={0} talking={male} hold={hold && male} />
+        <Person x={18} y={y} c={GADIS} frame={frame} wf={wf} walk shift={0.5} talking={!male} hold={hold && !male} />
+        <Person x={40} y={y} c={ARDI} frame={frame} wf={wf} walk shift={0} talking={male} hold={hold && male} />
       </g>
     );
   }
   return (
     <g>
-      <Person x={20} y={y} c={ARDI} frame={frame} talking={male} hold={hold && male} />
-      <Person x={40} y={y} flip c={GADIS} frame={frame} talking={!male} hold={hold && !male} />
+      <Person x={22} y={y} c={ARDI} frame={frame} wf={0} talking={male} hold={hold && male} />
+      <Person x={39} y={y} flip c={GADIS} frame={frame} wf={0} talking={!male} hold={hold && !male} />
     </g>
   );
 };
