@@ -7,7 +7,7 @@ if not ide:
 
 key = os.environ["GEMINI_API_KEY"]
 VOICES = ["id-ID-ArdiNeural", "id-ID-GadisNeural"]
-PLACES = ["kota", "rumah", "taman", "kamar", "kelas", "kafe"]
+PLACES = ["kota", "jalan", "rumah", "taman", "kamar", "kelas", "kafe", "desa", "pantai", "hutan", "gunung"]
 TIMES = ["pagi", "siang", "senja", "malam"]
 candidates = [
     os.environ.get("GEMINI_MODEL", "").strip(),
@@ -24,7 +24,7 @@ prompt = (
     "Tiap scene satu kalimat pendek (maksimal 12 kata) yang enak dibacakan. "
     "Kolom voice diisi id-ID-ArdiNeural (cowok) atau id-ID-GadisNeural (cewek), "
     "boleh bergantian seperti dialog. "
-    "Kolom place pilih satu: kota (di luar, jalan kota), taman (taman luar ruangan), rumah (ruang tamu atau dalam rumah), kamar (kamar tidur), kelas (ruang kelas sekolah), kafe (kafe atau warung). "
+    "Kolom place pilih satu: kota (di luar, pinggir jalan kota), jalan (jalan raya), desa (pedesaan dan sawah), pantai, hutan, gunung (pegunungan), taman (taman luar ruangan), rumah (ruang tamu atau dalam rumah), kamar (kamar tidur), kelas (ruang kelas sekolah), kafe (kafe atau warung). "
     "Kolom time pilih satu: pagi, siang, senja, malam. "
     "Isi place dan time sesuai tempat dan waktu kejadian tiap scene. "
     "Kolom action pilih satu: bicara (berdiri ngobrol) atau jalan (jalan bersama). "

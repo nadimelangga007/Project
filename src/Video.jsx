@@ -11,6 +11,7 @@ import {
 import { loadFont } from "@remotion/google-fonts/PressStart2P";
 import { Cast } from "./Char";
 import { Interior, INTERIORS } from "./Places";
+import { Outdoor, OUTDOORS } from "./Outdoor";
 
 const { fontFamily } = loadFont();
 
@@ -38,7 +39,7 @@ const BUILDINGS = [
 ];
 const STARS = [[12, 8], [40, 22], [70, 10], [100, 30], [130, 14], [160, 26], [25, 46], [150, 52], [85, 55]];
 const CLOUDS = [[18, 50], [104, 76], [52, 108]];
-const PLACES = ["kota", "rumah", "taman", "kamar", "kelas", "kafe"];
+const PLACES = [...INTERIORS, ...OUTDOORS];
 
 const Sky = ({ time, frame }) => {
   const [sx, sy, sc] = SUN[time];
@@ -168,9 +169,7 @@ const Scene = ({ text, audio, voice, duration, place, time, action, prop }) => {
         shapeRendering="crispEdges"
         style={{ position: "absolute", left: 0, top: 0 }}
       >
-        {INTERIORS.includes(p) ? <Interior place={p} time={t} /> : (<svg x="0" y="0" width="72" height="128" viewBox="0 0 180 320" preserveAspectRatio="none"><Sky time={t} frame={frame} />
-        {p === "kota" && <City time={t} />}
-        {p === "taman" && <Park />}</svg>)}
+        {INTERIORS.includes(p) ? <Interior place={p} time={t} /> : <Outdoor place={p} time={t} frame={frame} />}
         
         <rect x="0" y="0" width="72" height="128" fill={TINT[t][0]} opacity={TINT[t][1]} />
         <Cast frame={frame} duration={duration} male={male} action={action} prop={prop} />

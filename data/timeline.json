@@ -7,8 +7,8 @@
       "voice": "id-ID-ArdiNeural",
       "audio": "audio/scene1.mp3",
       "seconds": 2.42,
-      "place": "kamar",
-      "time": "malam",
+      "place": "desa",
+      "time": "pagi",
       "action": "bicara",
       "prop": "tidak"
     },
@@ -17,8 +17,8 @@
       "voice": "id-ID-GadisNeural",
       "audio": "audio/scene2.mp3",
       "seconds": 3.31,
-      "place": "kelas",
-      "time": "siang",
+      "place": "pantai",
+      "time": "senja",
       "action": "bicara",
       "prop": "tidak"
     },
@@ -27,8 +27,8 @@
       "voice": "id-ID-ArdiNeural",
       "audio": "audio/scene1.mp3",
       "seconds": 2.42,
-      "place": "kafe",
-      "time": "senja",
+      "place": "hutan",
+      "time": "siang",
       "action": "bicara",
       "prop": "tidak"
     },
@@ -37,8 +37,8 @@
       "voice": "id-ID-GadisNeural",
       "audio": "audio/scene2.mp3",
       "seconds": 3.31,
-      "place": "rumah",
-      "time": "pagi",
+      "place": "gunung",
+      "time": "malam",
       "action": "bicara",
       "prop": "tidak"
     }
