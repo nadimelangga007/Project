@@ -15,7 +15,7 @@
       "mood": "normal",
       "pembawa": 0,
       "pembicara": 0,
-      "ekspresi": "netral",
+      "ekspresi": "senang",
       "reaksi": "netral"
     },
     {
@@ -31,8 +31,8 @@
       "mood": "normal",
       "pembawa": 0,
       "pembicara": 1,
-      "ekspresi": "netral",
-      "reaksi": "netral"
+      "ekspresi": "sedih",
+      "reaksi": "kaget"
     },
     {
       "text": "Halo dunia!",
@@ -47,8 +47,8 @@
       "mood": "normal",
       "pembawa": 0,
       "pembicara": 2,
-      "ekspresi": "netral",
-      "reaksi": "netral"
+      "ekspresi": "marah",
+      "reaksi": "sedih"
     },
     {
       "text": "Ini video pertamaku.",
@@ -63,7 +63,7 @@
       "mood": "normal",
       "pembawa": 2,
       "pembicara": 0,
-      "ekspresi": "netral",
+      "ekspresi": "kaget",
       "reaksi": "netral"
     },
     {
@@ -79,8 +79,8 @@
       "mood": "normal",
       "pembawa": 0,
       "pembicara": 2,
-      "ekspresi": "netral",
-      "reaksi": "netral"
+      "ekspresi": "senang",
+      "reaksi": "marah"
     },
     {
       "text": "Ini video pertamaku.",
@@ -96,7 +96,7 @@
       "pembawa": 1,
       "pembicara": 1,
       "ekspresi": "netral",
-      "reaksi": "netral"
+      "reaksi": "senang"
     }
   ],
   "karakter": [
