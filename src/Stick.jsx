@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { SceneCtx } from "./Weather";
-import { S, CF, DEFAULT_KARAKTER } from "./Char";
+import { S, CF, DEFAULT_KARAKTER, Cast } from "./Char";
 
 const D = Math.PI / 180;
 const HIP = [6, 21.5];
@@ -13,7 +13,7 @@ const PAL = {
   malam: ["#1d2244", "#e8eef4"],
 };
 
-const pal = (variant, time) => {
+const palBase = (variant, time) => {
   if (variant === "papan") {
     return {
       bg: time === "malam" ? "#1b2b24" : "#2f4a3a",
@@ -29,6 +29,16 @@ const pal = (variant, time) => {
   }
   const [bg, ink] = PAL[time] || PAL.siang;
   return { bg, ink, a1: "#f2b43a", a2: "#41a6f6", a3: "#e8618c", leaf: "#a8e6b0", board: "#3f6b52", chalk: "#f4f4f4", dark: time === "malam" };
+};
+
+const KOMIK = { pagi: "#ffe08a", siang: "#7ec8ff", senja: "#ff9f6e", malam: "#2a2f6e" };
+
+const pal = (variant, time) => {
+  if (variant === "komik") {
+    return { bg: KOMIK[time] || KOMIK.siang, fill: "#fff6e0", wall: "#ffe3b0", ink: "#111111", moon: "#fff7c2", a1: "#ffd23f", a2: "#3ea6ff", a3: "#ff4f7b", leaf: "#6fd36f", board: "#2f6b52", chalk: "#ffffff", dark: time === "malam", sw: 1.1, clean: true, halftone: true };
+  }
+  const b = palBase(variant, time);
+  return { ...b, fill: b.bg };
 };
 
 const Wob = ({ frame }) => (
@@ -53,12 +63,12 @@ const Sky = ({ P, time, frame, cuaca }) => {
       {time === "malam" &&
         STARS.map(([x, y], i) =>
           (frame + i * 7) % 30 < 24 ? (
-            <path key={i} d={`M${x - 1} ${y} L${x + 1} ${y} M${x} ${y - 1} L${x} ${y + 1}`} />
+            <path key={i} stroke={P.moon || P.ink} d={`M${x - 1} ${y} L${x + 1} ${y} M${x} ${y - 1} L${x} ${y + 1}`} />
           ) : null
         )}
       {time === "malam" && !gray && (
         <g>
-          <circle cx="56" cy="48" r="4.5" fill={P.ink} stroke="none" />
+          <circle cx="56" cy="48" r="4.5" fill={P.moon || P.ink} stroke="none" />
           <circle cx="58" cy="46.5" r="4" fill={P.bg} stroke="none" />
         </g>
       )}
@@ -103,7 +113,7 @@ const Kota = ({ P }) => (
   <g>
     {[[3, 56, 14, 46], [19, 42, 16, 60], [37, 64, 12, 38], [51, 48, 17, 54]].map(([x, y, w, h], i) => (
       <g key={i}>
-        <rect x={x} y={y} width={w} height={h} fill={P.bg} />
+        <rect x={x} y={y} width={w} height={h} fill={P.fill} />
         {Array.from({ length: Math.floor(h / 9) }).map((_, r) => (
           <g key={r}>
             {Array.from({ length: Math.floor(w / 5) }).map((_, c) => (
@@ -142,7 +152,7 @@ const Taman = ({ P }) => (
 const Desa = ({ P }) => (
   <g>
     <path d="M0 98 Q16 76 34 94 T72 90" />
-    <rect x="40" y="78" width="16" height="14" fill={P.bg} />
+    <rect x="40" y="78" width="16" height="14" fill={P.fill} />
     <path d="M38 78 L48 68 L58 78 Z" fill={P.a3} />
     <rect x="46" y="84" width="4" height="8" />
     <path d="M0 108 Q18 105 36 108 T72 108 M0 114 Q18 111 36 114 T72 114" />
@@ -184,9 +194,9 @@ const Hutan = ({ P }) => (
 
 const Gunung = ({ P }) => (
   <g>
-    <path d="M-4 102 L18 52 L40 102" fill={P.bg} />
+    <path d="M-4 102 L18 52 L40 102" fill={P.fill} />
     <path d="M12.5 64 L18 52 L23.5 64 L21 61.5 L18 65 L15 61.5 Z" fill={P.a2} />
-    <path d="M26 102 L50 42 L74 102" fill={P.bg} />
+    <path d="M26 102 L50 42 L74 102" fill={P.fill} />
     <path d="M44 56 L50 42 L56 56 L53 53 L50 57 L47 53 Z" fill={P.a2} />
   </g>
 );
@@ -195,9 +205,9 @@ const Rumah = ({ P }) => (
   <g>
     <WinBox P={P} x={42} y={40} w={22} h={26} />
     <rect x="5" y="84" width="26" height="14" rx="3" fill={P.a3} fillOpacity="0.5" />
-    <rect x="7" y="76" width="22" height="10" rx="3" fill={P.bg} />
+    <rect x="7" y="76" width="22" height="10" rx="3" fill={P.fill} />
     <path d="M8 98 L8 102 M28 98 L28 102" />
-    <rect x="58" y="90" width="8" height="12" fill={P.bg} />
+    <rect x="58" y="90" width="8" height="12" fill={P.fill} />
     <path d="M62 90 Q58 80 55 78 M62 90 Q64 78 68 76" />
   </g>
 );
@@ -205,8 +215,8 @@ const Rumah = ({ P }) => (
 const Kamar = ({ P }) => (
   <g>
     <rect x="3" y="88" width="32" height="12" rx="2" fill={P.a2} fillOpacity="0.5" />
-    <rect x="3" y="78" width="4" height="24" fill={P.bg} />
-    <rect x="9" y="83" width="10" height="5" rx="2" fill={P.bg} />
+    <rect x="3" y="78" width="4" height="24" fill={P.fill} />
+    <rect x="9" y="83" width="10" height="5" rx="2" fill={P.fill} />
     <path d="M62 102 L62 82" />
     <path d="M56 82 L68 82 L66 74 L58 74 Z" fill={P.a1} fillOpacity="0.7" />
     <WinBox P={P} x={44} y={42} w={14} h={18} />
@@ -227,7 +237,7 @@ const Kafe = ({ P }) => (
   <g>
     <rect x="40" y="88" width="30" height="14" fill={P.a1} fillOpacity="0.5" />
     <path d="M40 88 L70 88" />
-    <rect x="46" y="80" width="5" height="8" fill={P.bg} />
+    <rect x="46" y="80" width="5" height="8" fill={P.fill} />
     <path d="M51 82 Q54 83 52 86" />
     <rect x="6" y="46" width="22" height="14" fill={P.board} />
     <path d="M9 51 L24 51 M9 55 L20 55" stroke={P.chalk} />
@@ -250,11 +260,21 @@ export const StickBg = ({ place, time, variant, frame }) => {
   return (
     <g>
       <Wob frame={frame} />
-      <rect x="0" y="0" width="72" height="128" fill={P.bg} />
-      <g filter="url(#wob)" fill="none" stroke={P.ink} strokeWidth="0.7" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="0" y="0" width="72" height="128" fill={INDOOR.includes(place) && P.wall ? P.wall : P.bg} />
+      <g filter={P.clean ? undefined : "url(#wob)"} fill="none" stroke={P.ink} strokeWidth={P.sw || 0.7} strokeLinecap="round" strokeLinejoin="round">
         {!INDOOR.includes(place) && <Sky P={P} time={time} frame={frame} cuaca={cuaca} />}
         <path d="M0 102 L72 102" />
         <Body P={P} frame={frame} />
+        {P.halftone && (
+          <g>
+            <defs>
+              <pattern id="dots" width="2.2" height="2.2" patternUnits="userSpaceOnUse">
+                <circle cx="1.1" cy="1.1" r="0.45" fill="#000000" stroke="none" />
+              </pattern>
+            </defs>
+            <rect x="0" y="86" width="72" height="42" fill="url(#dots)" opacity="0.22" stroke="none" />
+          </g>
+        )}
       </g>
     </g>
   );
@@ -488,6 +508,60 @@ export const StickCast = ({ frame, time, variant, karakter, bicara, ekspresi, re
           <SPerson key={i} x={xs[i]} y={y} flip={flips[i]} c={c} P={P} frame={frame} wf={wf} walk={walk} shift={sh[i]} talking={i === sp} expr={ex(i)} prop={pr(i)} />
         ))}
       </g>
+    </g>
+  );
+};
+
+
+export const speakerX = (n, sp, walk) => {
+  const xs = walk ? (n === 1 ? [28] : n === 2 ? [40, 18] : [46, 28, 10]) : n === 1 ? [30] : n === 2 ? [22, 39] : [13, 31, 49];
+  return (xs[Math.min(Math.max(sp, 0), xs.length - 1)] || 30) + 5.5;
+};
+
+const SFX = {
+  kaget: ["HAH?!", "#ffd23f"],
+  marah: ["GRR!!", "#ff4f4f"],
+  senang: ["YEAY!", "#ff8fb0"],
+  sedih: ["HUHU...", "#73c6f9"],
+};
+
+const Burst = ({ cx, cy, scale, fill }) => {
+  const pts = Array.from({ length: 24 })
+    .map((_, i) => {
+      const a = (i * Math.PI) / 12;
+      const r = i % 2 === 0 ? 10 : 6.5;
+      return `${cx + Math.cos(a) * r * scale},${cy + Math.sin(a) * r * scale * 0.8}`;
+    })
+    .join(" ");
+  return <polygon points={pts} fill={fill} stroke="#111111" strokeWidth="0.9" strokeLinejoin="round" />;
+};
+
+export const KomikCast = ({ frame, time, place, font, ...rest }) => {
+  const n = Math.min(rest.karakter && rest.karakter.length ? rest.karakter.length : 2, 3);
+  const sp = Number.isInteger(rest.bicara) ? rest.bicara : 0;
+  const sfx = SFX[rest.ekspresi];
+  const cx = Math.max(14, Math.min(58, speakerX(n, sp, rest.action === "jalan") + (sp < n / 2 ? 15 : -15)));
+  const sc = frame < 10 ? 0.3 + 0.08 * frame : 1.1 - Math.min(0.1, (frame - 10) / 100);
+  return (
+    <g>
+      <Cast frame={frame} {...rest} ink="#111111" />
+      {sfx && frame < 50 && (
+        <g>
+          <Burst cx={cx} cy={58} scale={sc} fill={sfx[1]} />
+          <text x={cx} y={59.6} textAnchor="middle" fontFamily={font} fontSize={4.6 * sc} fill="#111111" transform={`rotate(-8 ${cx} 58)`}>
+            {sfx[0]}
+          </text>
+        </g>
+      )}
+      {frame < 60 && (
+        <g>
+          <rect x="3" y="116" width="42" height="8.5" fill="#ffd23f" stroke="#111111" strokeWidth="0.8" />
+          <text x="5" y="122" fontFamily={font} fontSize="4.4" fill="#111111">
+            {(time + " - " + place).toUpperCase()}
+          </text>
+        </g>
+      )}
+      <rect x="0.9" y="0.9" width="70.2" height="126.2" fill="none" stroke="#111111" strokeWidth="1.8" />
     </g>
   );
 };

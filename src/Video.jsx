@@ -10,14 +10,16 @@ import {
 } from "remotion";
 import { loadFont } from "@remotion/google-fonts/PressStart2P";
 import { loadFont as loadHand } from "@remotion/google-fonts/PatrickHand";
+import { loadFont as loadComic } from "@remotion/google-fonts/Bangers";
 import { Cast, S as CHAR_S, STRIDE, CF, DEFAULT_KARAKTER } from "./Char";
 import { Interior, INTERIORS } from "./Places";
 import { Outdoor, OUTDOORS } from "./Outdoor";
-import { StickBg, StickCast } from "./Stick";
+import { StickBg, StickCast, KomikCast, speakerX } from "./Stick";
 import { SceneCtx, Mood, Particles, CUACA, MOODS } from "./Weather";
 
 const { fontFamily } = loadFont();
 const handFont = loadHand().fontFamily;
+const comicFont = loadComic().fontFamily;
 
 const Pan = ({ sc, children }) => {
   const m = sc % 72;
@@ -169,7 +171,9 @@ const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca,
   const spIdx = Number.isInteger(bicara) ? Math.min(Math.max(bicara, 0), chars.length - 1) : voice.includes("Gadis") ? 1 : 0;
   const nama = String((chars[spIdx] && chars[spIdx].nama) || (spIdx === 1 ? "Gadis" : "Ardi")).toUpperCase();
   const male = spIdx === 0;
-  const stk = gaya === "stick" || gaya === "papan";
+  const kom = gaya === "komik";
+  const stk = gaya === "stick" || gaya === "papan" || kom;
+  const tailX = Math.max(30, Math.min(920, speakerX(Math.min(chars.length, 3), spIdx, action === "jalan") * 15 - 43 - 22));
   const t = SKIES[time] ? time : "senja";
   const p = PLACES.includes(place) ? place : "kota";
   const cu = CUACA.includes(cuaca) ? cuaca : "cerah";
@@ -193,7 +197,7 @@ const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca,
         
         {!stk && <rect x="0" y="0" width="72" height="128" fill={TINT[t][0]} opacity={TINT[t][1]} />}
         <Mood mood={mo} />
-        {stk ? <StickCast frame={frame} time={t} variant={gaya} karakter={karakter} bicara={spIdx} ekspresi={ekspresi} reaksi={reaksi} action={action} prop={prop} pembawa={pembawa} walkStart={walkStart} /> : <Cast frame={frame} karakter={karakter} bicara={spIdx} ekspresi={ekspresi} reaksi={reaksi} action={action} prop={prop} pembawa={pembawa} walkStart={walkStart} />}
+        {kom ? <KomikCast frame={frame} time={t} place={p} font={comicFont} karakter={karakter} bicara={spIdx} ekspresi={ekspresi} reaksi={reaksi} action={action} prop={prop} pembawa={pembawa} walkStart={walkStart} /> : stk ? <StickCast frame={frame} time={t} variant={gaya} karakter={karakter} bicara={spIdx} ekspresi={ekspresi} reaksi={reaksi} action={action} prop={prop} pembawa={pembawa} walkStart={walkStart} /> : <Cast frame={frame} karakter={karakter} bicara={spIdx} ekspresi={ekspresi} reaksi={reaksi} action={action} prop={prop} pembawa={pembawa} walkStart={walkStart} />}
         {!INTERIORS.includes(p) && <Particles cuaca={cu} frame={frame} />}
         
       </svg>
@@ -202,22 +206,29 @@ const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca,
           position: "absolute",
           left: 36,
           right: 36,
-          bottom: 90,
-          background: "rgba(16, 18, 40, 0.88)",
-          color: "#f4f4f4",
-          border: "6px solid #ef7d57",
-          boxShadow: "0 8px 0 #5d275d",
+          bottom: kom ? 1040 : 90,
+          background: kom ? "#ffffff" : "rgba(16, 18, 40, 0.88)",
+          color: kom ? "#111111" : "#f4f4f4",
+          border: kom ? "7px solid #111111" : "6px solid #ef7d57",
+          boxShadow: kom ? "8px 8px 0 #111111" : "0 8px 0 #5d275d",
           padding: "22px 30px",
-          fontFamily: stk ? handFont : fontFamily,
-          fontSize: 32,
+          borderRadius: kom ? 40 : 0,
+          fontFamily: kom ? comicFont : stk ? handFont : fontFamily,
+          fontSize: kom ? 36 : 32,
           lineHeight: 1.65,
         }}
       >
-        <div style={{ fontSize: 26, marginBottom: 14, color: ["#73c6f9", "#ff8fb0", "#a8f070"][spIdx] }}>
+        <div style={{ fontSize: 26, marginBottom: 14, color: kom ? ["#1d5fd1", "#d6246b", "#1a8a3a"][spIdx] : ["#73c6f9", "#ff8fb0", "#a8f070"][spIdx] }}>
           {nama}
         </div>
         <span>{text.slice(0, count)}</span>
         <span style={{ opacity: 0 }}>{text.slice(count)}</span>
+        {kom && (
+          <>
+            <div style={{ position: "absolute", left: tailX, bottom: -119, width: 0, height: 0, borderLeft: "22px solid transparent", borderRight: "22px solid transparent", borderTop: "112px solid #111111" }} />
+            <div style={{ position: "absolute", left: tailX + 9, bottom: -112, width: 0, height: 0, borderLeft: "13px solid transparent", borderRight: "13px solid transparent", borderTop: "113px solid #ffffff" }} />
+          </>
+        )}
       </div>
     </AbsoluteFill>
   );

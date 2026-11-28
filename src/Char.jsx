@@ -157,7 +157,7 @@ const PropArt = ({ prop, frame }) => {
   return null;
 };
 
-const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, expr, prop }) => {
+const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, expr, prop, ink }) => {
   const p = walk ? (((wf % CF) / CF) + (shift || 0)) % 1 : 0;
   const open = talking && Math.floor(frame / 4) % 2 === 0;
   const [fA, kA] = walk ? legAngles(p) : [4, 0];
@@ -177,8 +177,11 @@ const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, expr, prop }) 
       transform={`translate(${flip ? x + W * S : x}, ${y}) scale(${flip ? -S : S}, ${S})`}
       opacity={1}
       shapeRendering="geometricPrecision"
+      stroke={ink || "none"}
+      strokeWidth={ink ? 0.5 : 0}
+      strokeLinejoin="round"
     >
-      <ellipse cx="6" cy="36.2" rx="7" ry="0.8" fill="#000000" opacity="0.25" />
+      <ellipse cx="6" cy="36.2" rx="7" ry="0.8" fill="#000000" opacity="0.25" stroke="none" />
       <g transform={`translate(0, ${bob})`}>
         <Leg f={fB} k={kB} color={c.pantsDark} shoe={c.shoeDark} />
         <Leg f={fA} k={kA} color={c.pants} shoe={c.shoe} />
@@ -206,7 +209,7 @@ const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, expr, prop }) 
           {c.hairStyle !== "botak" && <ellipse cx="8.2" cy="1.9" rx="2.3" ry="1.1" fill={c.hair} />}
           <circle cx="5.2" cy="5" r="0.8" fill={c.skinDark} />
           <circle cx="10.5" cy="5.4" r="0.65" fill={c.skin} />
-          <Face expr={expr} open={open} />
+          <g stroke="none"><Face expr={expr} open={open} /></g>
           {topi && (
             <g>
               <ellipse cx="5.8" cy="1.6" rx="4.6" ry="2.4" fill={c.cap} />
@@ -227,7 +230,7 @@ const Person = ({ x, y, flip, c, frame, wf, walk, shift, talking, expr, prop }) 
   );
 };
 
-export const Cast = ({ frame, karakter, bicara, ekspresi, reaksi, action, prop, pembawa, walkStart }) => {
+export const Cast = ({ frame, karakter, bicara, ekspresi, reaksi, action, prop, pembawa, walkStart, ink }) => {
   const list = (karakter && karakter.length ? karakter : DEFAULT_KARAKTER).slice(0, 3);
   const chars = list.map(buildChar);
   const n = chars.length;
@@ -246,7 +249,7 @@ export const Cast = ({ frame, karakter, bicara, ekspresi, reaksi, action, prop, 
     return (
       <g>
         {chars.map((c, i) => (
-          <Person key={i} x={xs[i]} y={y} c={c} frame={frame} wf={wf} walk shift={sh[i]} talking={i === sp} expr={ex(i)} prop={pr(i)} />
+          <Person key={i} x={xs[i]} y={y} c={c} ink={ink} frame={frame} wf={wf} walk shift={sh[i]} talking={i === sp} expr={ex(i)} prop={pr(i)} />
         ))}
       </g>
     );
@@ -256,7 +259,7 @@ export const Cast = ({ frame, karakter, bicara, ekspresi, reaksi, action, prop, 
   return (
     <g>
       {chars.map((c, i) => (
-        <Person key={i} x={xs[i]} y={y} flip={flips[i]} c={c} frame={frame} wf={0} talking={i === sp} expr={ex(i)} prop={pr(i)} />
+        <Person key={i} x={xs[i]} y={y} flip={flips[i]} c={c} ink={ink} frame={frame} wf={0} talking={i === sp} expr={ex(i)} prop={pr(i)} />
       ))}
     </g>
   );
