@@ -27,7 +27,7 @@
       "time": "pagi",
       "action": "bicara",
       "prop": "tidak",
-      "cuaca": "cerah",
+      "cuaca": "mendung",
       "mood": "normal",
       "pembawa": 0,
       "pembicara": 1,
@@ -40,7 +40,7 @@
       "audio": "audio/scene1.mp3",
       "seconds": 2.42,
       "place": "kafe",
-      "time": "senja",
+      "time": "malam",
       "action": "bicara",
       "prop": "tidak",
       "cuaca": "cerah",
@@ -127,5 +127,6 @@
       "gaya_rambut": "botak",
       "aksesori": "keduanya"
     }
-  ]
+  ],
+  "gaya": "papan"
 }

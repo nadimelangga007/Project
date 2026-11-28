@@ -9,12 +9,15 @@ import {
   useVideoConfig,
 } from "remotion";
 import { loadFont } from "@remotion/google-fonts/PressStart2P";
+import { loadFont as loadHand } from "@remotion/google-fonts/PatrickHand";
 import { Cast, S as CHAR_S, STRIDE, CF, DEFAULT_KARAKTER } from "./Char";
 import { Interior, INTERIORS } from "./Places";
 import { Outdoor, OUTDOORS } from "./Outdoor";
+import { StickBg, StickCast } from "./Stick";
 import { SceneCtx, Mood, Particles, CUACA, MOODS } from "./Weather";
 
 const { fontFamily } = loadFont();
+const handFont = loadHand().fontFamily;
 
 const Pan = ({ sc, children }) => {
   const m = sc % 72;
@@ -160,12 +163,13 @@ const House = ({ time }) => {
   );
 };
 
-const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca, mood, walkStart, pembawa, karakter, bicara, ekspresi, reaksi }) => {
+const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca, mood, walkStart, pembawa, karakter, bicara, ekspresi, reaksi, gaya }) => {
   const frame = useCurrentFrame();
   const chars = karakter && karakter.length ? karakter : DEFAULT_KARAKTER;
   const spIdx = Number.isInteger(bicara) ? Math.min(Math.max(bicara, 0), chars.length - 1) : voice.includes("Gadis") ? 1 : 0;
   const nama = String((chars[spIdx] && chars[spIdx].nama) || (spIdx === 1 ? "Gadis" : "Ardi")).toUpperCase();
   const male = spIdx === 0;
+  const stk = gaya === "stick" || gaya === "papan";
   const t = SKIES[time] ? time : "senja";
   const p = PLACES.includes(place) ? place : "kota";
   const cu = CUACA.includes(cuaca) ? cuaca : "cerah";
@@ -185,11 +189,11 @@ const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca,
         shapeRendering="crispEdges"
         style={{ position: "absolute", left: 0, top: 0 }}
       >
-        <SceneCtx.Provider value={{ cuaca: cu }}><Pan sc={action === "jalan" ? ((walkStart + frame) * CHAR_S * STRIDE) / CF : 0}>{INTERIORS.includes(p) ? <Interior place={p} time={t} /> : <Outdoor place={p} time={t} frame={frame} />}</Pan></SceneCtx.Provider>
+        <SceneCtx.Provider value={{ cuaca: cu }}><Pan sc={action === "jalan" ? ((walkStart + frame) * CHAR_S * STRIDE) / CF : 0}>{stk ? <StickBg place={p} time={t} variant={gaya} frame={frame} /> : INTERIORS.includes(p) ? <Interior place={p} time={t} /> : <Outdoor place={p} time={t} frame={frame} />}</Pan></SceneCtx.Provider>
         
-        <rect x="0" y="0" width="72" height="128" fill={TINT[t][0]} opacity={TINT[t][1]} />
+        {!stk && <rect x="0" y="0" width="72" height="128" fill={TINT[t][0]} opacity={TINT[t][1]} />}
         <Mood mood={mo} />
-        <Cast frame={frame} karakter={karakter} bicara={spIdx} ekspresi={ekspresi} reaksi={reaksi} action={action} prop={prop} pembawa={pembawa} walkStart={walkStart} />
+        {stk ? <StickCast frame={frame} time={t} variant={gaya} karakter={karakter} bicara={spIdx} ekspresi={ekspresi} reaksi={reaksi} action={action} prop={prop} pembawa={pembawa} walkStart={walkStart} /> : <Cast frame={frame} karakter={karakter} bicara={spIdx} ekspresi={ekspresi} reaksi={reaksi} action={action} prop={prop} pembawa={pembawa} walkStart={walkStart} />}
         {!INTERIORS.includes(p) && <Particles cuaca={cu} frame={frame} />}
         
       </svg>
@@ -204,7 +208,7 @@ const Scene = ({ text, audio, voice, duration, place, time, action, prop, cuaca,
           border: "6px solid #ef7d57",
           boxShadow: "0 8px 0 #5d275d",
           padding: "22px 30px",
-          fontFamily,
+          fontFamily: stk ? handFont : fontFamily,
           fontSize: 32,
           lineHeight: 1.65,
         }}
@@ -246,6 +250,7 @@ export const Video = ({ story }) => {
               walkStart={wk}
               pembawa={scene.pembawa}
               karakter={story.karakter}
+              gaya={story.gaya}
               bicara={scene.pembicara}
               ekspresi={scene.ekspresi}
               reaksi={scene.reaksi}

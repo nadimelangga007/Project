@@ -49,8 +49,9 @@ prompt = (
     "Kolom pembawa adalah nomor urut karakter yang membawa benda itu (mulai dari 0). "
     "Kolom cuaca pilih satu: cerah, mendung, hujan, salju, kabut. "
     "Kolom mood pilih satu: normal, ceria, sedih, tegang, seram (suasana hati adegan). "
-    'Balas HANYA JSON valid dengan bentuk: {"title": "...", "karakter": [{"nama": "...", "gender": "...", "baju": "...", "celana": "...", "rambut": "...", "gaya_rambut": "...", "aksesori": "..."}], '
+    'Balas HANYA JSON valid dengan bentuk: {"title": "...", "gaya": "pixel", "karakter": [{"nama": "...", "gender": "...", "baju": "...", "celana": "...", "rambut": "...", "gaya_rambut": "...", "aksesori": "..."}], '
     '"scenes": [{"text": "...", "pembicara": 0, "ekspresi": "...", "reaksi": "...", "place": "...", "time": "...", "action": "...", "prop": "...", "pembawa": 0, "cuaca": "...", "mood": "..."}]}. '
+    "Kolom gaya (satu untuk seluruh video) pilih satu: pixel, stick (stick figure di kertas putih), papan (papan tulis kapur). Isi pixel kecuali ide menyebut gaya lain dengan jelas. "
     "Ide: " + ide
 )
 
@@ -150,6 +151,7 @@ for s in result["scenes"]:
     s["text"] = str(s.get("text") or "...")
 
 result["karakter"] = cleaned
+result["gaya"] = pick(result.get("gaya"), ["pixel", "stick", "papan"], "pixel")
 result["fps"] = 30
 result.setdefault("title", "Video")
 
